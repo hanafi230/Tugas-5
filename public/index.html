@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NodeSquad</title>
+    <link rel="stylesheet" href="/assets/style.css" />
+  </head>
+  <body>
+    <h1>Selamat datang <span></span>!</h1>
+    <table>
+      <thead>
+        <th>NIM</th>
+        <th>Nama</th>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button id="logout">Logout</button>
+    <script>
+      const nama = document.querySelector("span");
+      const logout = document.querySelector("#logout");
+
+      fetch("/api/me")
+        .then((response) => response.json())
+        .then((mahasiswa) => (nama.textContent = mahasiswa.nama));
+
+      logout.onclick = async() => {
+        await fetch("/api/keluar").then((response) => {
+          if (response.ok) {
+            location.href = "/login";
+          }
+
+        });
+        location.reload();
+      };
+
+      fetch("/api/mahasiswa")
+        .then((response) => response.json())
+        .then((mahasiswa) => {
+          const tbody = document.querySelector("tbody");
+          mahasiswa.forEach((m) => {
+            const tr = document.createElement("tr");
+
+            const tdNim = document.createElement("td");
+            tdNim.textContent = m.nim;
+            tr.appendChild(tdNim);
+
+            const tdNama = document.createElement("td");
+            tdNama.textContent = m.nama;
+            tr.appendChild(tdNama);
+
+            tbody.appendChild(tr);
+          });
+        });
+    </script>
+  </body>
+</html>
